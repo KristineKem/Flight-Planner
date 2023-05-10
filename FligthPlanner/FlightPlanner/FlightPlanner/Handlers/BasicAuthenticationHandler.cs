@@ -24,7 +24,7 @@ namespace FlightPlanner.Handlers
                 return Task.FromResult(AuthenticateResult.NoResult());
             }
 
-            if(!Request.Headers.ContainsKey("Authirization"))
+            if(!Request.Headers.ContainsKey("Authorization"))
             {
                 return Task.FromResult(AuthenticateResult.Fail("Missing authorization header!"));
             }
