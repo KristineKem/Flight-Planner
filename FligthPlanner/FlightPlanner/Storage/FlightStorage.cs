@@ -26,15 +26,15 @@ namespace FlightPlanner.Storage
 
         public static bool IsFlightValuesValid(Flight flight)
         {
-            if (String.IsNullOrEmpty(flight.Carrier.ToString())
-                    && String.IsNullOrEmpty(flight.ArrivalTime.ToString())
-                    && String.IsNullOrEmpty(flight.DepartureTime.ToString())
-                    && String.IsNullOrEmpty(flight.To.Country.ToString())
-                    && String.IsNullOrEmpty(flight.To.City.ToString())
-                    && String.IsNullOrEmpty(flight.To.AirportCode.ToString())
-                    && String.IsNullOrEmpty(flight.From.Country.ToString())
-                    && String.IsNullOrEmpty(flight.From.City.ToString())
-                    && String.IsNullOrEmpty(flight.From.AirportCode.ToString()))
+            if (string.IsNullOrEmpty(flight.Carrier.ToString())
+                    && string.IsNullOrEmpty(flight.ArrivalTime.ToString())
+                    && string.IsNullOrEmpty(flight.DepartureTime.ToString())
+                    && string.IsNullOrEmpty(flight.To.Country.ToString())
+                    && string.IsNullOrEmpty(flight.To.City.ToString())
+                    && string.IsNullOrEmpty(flight.To.AirportCode.ToString())
+                    && string.IsNullOrEmpty(flight.From.Country.ToString())
+                    && string.IsNullOrEmpty(flight.From.City.ToString())
+                    && string.IsNullOrEmpty(flight.From.AirportCode.ToString()))
                 return true;
 
             return false;
