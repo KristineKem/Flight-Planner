@@ -10,12 +10,7 @@ namespace FlightPlanner.Handlers
 {
     public class BasicAuthenticationHandler : AuthenticationHandler<AuthenticationSchemeOptions>
     {
-        public BasicAuthenticationHandler(
-        IOptionsMonitor<AuthenticationSchemeOptions> options,
-        ILoggerFactory logger,
-        UrlEncoder encoder,
-        ISystemClock clock
-        ) : base(options, logger, encoder, clock)
+        public BasicAuthenticationHandler(IOptionsMonitor<AuthenticationSchemeOptions> options, ILoggerFactory logger, UrlEncoder encoder, ISystemClock clock) : base(options, logger, encoder, clock)
         {
         }
 
@@ -36,8 +31,8 @@ namespace FlightPlanner.Handlers
             try
             {
                 var authHeader = AuthenticationHeaderValue.Parse(Request.Headers["Authorization"]);
-                var credentialBytes = Convert.FromBase64String(authHeader.Parameter);
-                var credentials = Encoding.UTF8.GetString(credentialBytes).Split(new[] { ':' }, 2);
+                var credentialBytes = Convert.FromBase64String(authHeader.Parameter); //username:password
+                var credentials = Encoding.UTF8.GetString(credentialBytes).Split(new[] { ':' });
                 var username = credentials[0];
                 var password = credentials[1];
                 authorized = username == "codelex-admin" && password == "Password123";
@@ -59,6 +54,5 @@ namespace FlightPlanner.Handlers
 
             return Task.FromResult(AuthenticateResult.Success(ticket));
         }
-
-    } 
+    }
 }
