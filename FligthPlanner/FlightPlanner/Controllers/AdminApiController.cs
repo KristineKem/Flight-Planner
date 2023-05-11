@@ -28,7 +28,7 @@ namespace FlightPlanner.Controllers
         [Route("flights")]
         public IActionResult AddFlight(Flight flight)
         {
-            if(FlightStorage.DoesFlightAlreadyExist(flight))
+            if(FlightStorage.DoesFlightAlreadyExist(flight) == true)
             {
                return Conflict();
             }
@@ -37,10 +37,32 @@ namespace FlightPlanner.Controllers
             {
                 return BadRequest();
             }
+
+            if(FlightStorage.IsSameAirportCodes(flight))
+            {
+                return BadRequest();
+            }
+
+            if(FlightStorage.IsDateValid(flight) == false)
+            {
+                return BadRequest();
+            }
            
             FlightStorage.AddFlight(flight);
             return Created("", flight);
-                       
+        }
+
+        [HttpDelete]
+        [Route("flights/{id}")]
+        public IActionResult DeleteFlight(int id)
+        {
+            var flight = FlightStorage.RemoveFlight(id);
+            if(flight == null)
+            {
+                return Ok();
+            }
+
+            return Ok();
         }
     }
 }
