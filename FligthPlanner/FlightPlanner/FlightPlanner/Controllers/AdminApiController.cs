@@ -12,7 +12,7 @@ namespace FlightPlanner.Controllers
     public class AdminApiController : ControllerBase
     {
         [HttpGet]
-        [Route("fligths/{id}")]
+        [Route("flights/{id}")]
         public IActionResult GetFlight(int id)
         {
             var flight = FlightStorage.GetFlight(id);
