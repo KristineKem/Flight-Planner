@@ -28,8 +28,19 @@ namespace FlightPlanner.Controllers
         [Route("flights")]
         public IActionResult AddFlight(Flight flight)
         {
+            if(FlightStorage.DoesFlightAlreadyExist(flight))
+            {
+               return Conflict();
+            }
+
+            if(FlightStorage.IsFlightValuesValid(flight))
+            {
+                return BadRequest();
+            }
+           
             FlightStorage.AddFlight(flight);
             return Created("", flight);
+                       
         }
     }
 }

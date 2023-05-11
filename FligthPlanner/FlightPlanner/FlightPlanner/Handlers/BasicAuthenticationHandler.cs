@@ -10,10 +10,13 @@ namespace FlightPlanner.Handlers
 {
     public class BasicAuthenticationHandler : AuthenticationHandler<AuthenticationSchemeOptions>
     {
-        public BasicAuthenticationHandler(IOptionsMonitor<AuthenticationSchemeOptions> options, ILoggerFactory logger,
-            UrlEncoder encoder, ISystemClock clock) : base(options, logger, encoder, clock)
+        public BasicAuthenticationHandler(
+        IOptionsMonitor<AuthenticationSchemeOptions> options,
+        ILoggerFactory logger,
+        UrlEncoder encoder,
+        ISystemClock clock
+        ) : base(options, logger, encoder, clock)
         {
-
         }
 
         protected override Task<AuthenticateResult> HandleAuthenticateAsync()
@@ -24,33 +27,32 @@ namespace FlightPlanner.Handlers
                 return Task.FromResult(AuthenticateResult.NoResult());
             }
 
-            if(!Request.Headers.ContainsKey("Authorization"))
+            if (!Request.Headers.ContainsKey("Authorization"))
             {
-                return Task.FromResult(AuthenticateResult.Fail("Missing authorization header!"));
+                return Task.FromResult(AuthenticateResult.Fail("Missing Authorization Header"));
             }
 
             bool authorized;
-
             try
             {
-                var header = AuthenticationHeaderValue.Parse(Request.Headers["Authorization"]);
-                var credentialBytes = Convert.FromBase64String(header.Parameter); // username:password
-                var credentials = Encoding.UTF8.GetString(credentialBytes).Split(new[] { ':' });
+                var authHeader = AuthenticationHeaderValue.Parse(Request.Headers["Authorization"]);
+                var credentialBytes = Convert.FromBase64String(authHeader.Parameter);
+                var credentials = Encoding.UTF8.GetString(credentialBytes).Split(new[] { ':' }, 2);
                 var username = credentials[0];
                 var password = credentials[1];
                 authorized = username == "codelex-admin" && password == "Password123";
             }
             catch
             {
-                return Task.FromResult(AuthenticateResult.Fail("Invalid authorization header"));
+                return Task.FromResult(AuthenticateResult.Fail("Invalid Authorization Header"));
             }
 
-            if(!authorized)
+            if (!authorized)
             {
-                return Task.FromResult(AuthenticateResult.Fail("Invalid username or password"));
+                return Task.FromResult(AuthenticateResult.Fail("Invalid Username or Password"));
             }
 
-            var claims = new[] { new Claim(ClaimTypes.Name, "user")};
+            var claims = new[] { new Claim(ClaimTypes.Name, "user") };
             var identity = new ClaimsIdentity(claims, Scheme.Name);
             var principal = new ClaimsPrincipal(identity);
             var ticket = new AuthenticationTicket(principal, Scheme.Name);
