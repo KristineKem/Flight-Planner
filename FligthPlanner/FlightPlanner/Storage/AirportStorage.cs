@@ -11,13 +11,23 @@ namespace FlightPlanner.Storage
             _airports.Clear();
         }
 
-        public static Airport SearchAirport(Airport airport)
-        {
-            var foundAirport = _airports.Find(a => a.AirportCode.ToString().ToLower().Trim() == airport.AirportCode.ToString().ToLower().Trim()
-            && a.Country.ToString().ToLower().Trim() == airport.Country.ToString().ToLower().Trim()
-            && a.City.ToString().ToLower().Trim() == airport.City.ToString().ToLower().Trim());
+        public static List<Airport> SearchAirports(string typehead)
+        { 
+            var foundAirports = _airports.FindAll(a => a.AirportCode.ToLower().Contains(typehead.ToLower().Trim())
+                                                    || a.Country.ToLower().Contains(typehead.ToLower().Trim())
+                                                    || a.City.ToLower().Contains(typehead.ToLower().Trim()));
 
-            return foundAirport;
+            return foundAirports;
+        }
+
+        public static bool DoesAirportExist(Airport airport)
+        {
+            if(_airports.Any(a => a.Country == airport.Country
+            && a.City == airport.City
+            && a.AirportCode == airport.AirportCode))
+                return true;
+            return false;
         }
     }
 }
+ 

@@ -70,5 +70,47 @@ namespace FlightPlanner.Storage
             _flights.Clear();
             _id = 1;
         }
+
+        public static PageResult FindFlights(CustomerRequest request)
+        {
+            var pageResult = new PageResult();
+            
+            var flights = _flights.FindAll(f => f.From == request.From
+                                                && f.To == request.To
+                                                && f.DepartureTime == request.DepartureDate);
+
+            foreach(var flight in flights)
+            {
+                pageResult.Items.Add(flight);
+            }
+
+            pageResult.TotalItems = _flights.Count;
+            pageResult.Page = 0;
+
+            return pageResult;
+        }
+
+        public static bool IsRequestValuesValid (CustomerRequest request)
+        {
+            if(string.IsNullOrEmpty(request.From.Country.ToString())
+                || string.IsNullOrEmpty(request.From.City.ToString())
+                || string.IsNullOrEmpty(request.From.AirportCode.ToString())
+                || string.IsNullOrEmpty(request.To.Country.ToString())
+                || string.IsNullOrEmpty(request.To.City.ToString())
+                || string.IsNullOrEmpty(request.To.AirportCode.ToString())
+                || string.IsNullOrEmpty(request.DepartureDate.ToString())
+                )
+                return false;
+            return true;
+        }
+
+        
+
+        public static Flight SearchFlightById(int id)
+        {
+            var flight = GetFlight(id);
+
+            return flight;
+        }
     }
 }
