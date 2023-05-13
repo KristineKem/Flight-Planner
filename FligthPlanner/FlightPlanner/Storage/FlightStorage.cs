@@ -13,10 +13,10 @@ namespace FlightPlanner.Storage
         }
 
         public static Flight AddFlight(Flight flight)
-        {           
+        {
             flight.Id = _id++;
             _flights.Add(flight);
-            return flight;           
+            return flight;
         }
 
         public static bool DoesFlightAlreadyExist(Flight flight) 
@@ -51,7 +51,7 @@ namespace FlightPlanner.Storage
 
         public static bool IsSameAirportCodes(Flight flight)
         {
-            if(flight.To.AirportCode.ToLower() == flight.From.AirportCode.ToLower())
+            if(flight.To.AirportCode.ToLower().Trim() == flight.From.AirportCode.ToLower().Trim())
                 return true;
 
             return false;
@@ -110,9 +110,7 @@ namespace FlightPlanner.Storage
             }
 
             return true;
-        }
-
-        
+        } 
 
         public static Flight SearchFlightById(int id)
         {

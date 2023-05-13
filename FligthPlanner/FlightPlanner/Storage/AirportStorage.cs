@@ -36,9 +36,7 @@ namespace FlightPlanner.Storage
         }
       
         public static void AddAirport(Airport airport)
-        {
-            //te nekad netika lidosta pievienota jo skatījies lai lidosta neeksistē un lai tā būtu valīda. 
-            //izsaukuma zīme pirms IsAirportValuesValid to visu apgrieza pretēji. tapēc nekad nekas netika pievienots. :D
+        { 
             if(!DoesAirportExist(airport) && IsAirportValuesValid(airport))
             {
                  _airports.Add(airport);

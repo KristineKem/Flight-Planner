@@ -1,6 +1,5 @@
 ﻿using FlightPlanner.Models;
 using FlightPlanner.Storage;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FlightPlanner.Controllers
@@ -27,7 +26,6 @@ namespace FlightPlanner.Controllers
         [Route("flights/search")]
         public IActionResult SearchFlights(CustomerRequest request)
         {
-            //request ir valid.. atgriež true.. tapēc izpildās if un saka Bad request. :D pieņemam tikai sliktos pieprasījumus. :D
             if (!FlightStorage.IsRequestValuesValid(request))
             {
                 return BadRequest();

@@ -1,9 +1,7 @@
 ﻿using FlightPlanner.Models;
 using FlightPlanner.Storage;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Cryptography.X509Certificates;
 
 namespace FlightPlanner.Controllers
 {
@@ -58,7 +56,7 @@ namespace FlightPlanner.Controllers
                 AirportStorage.AddAirport(flight.To);
                 AirportStorage.AddAirport(flight.From);
                 return Created("", flight);
-            }            
+            }
         }
 
         [HttpDelete]
