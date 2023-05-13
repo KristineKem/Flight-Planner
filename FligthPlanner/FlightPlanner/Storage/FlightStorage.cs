@@ -103,7 +103,7 @@ namespace FlightPlanner.Storage
                 || string.IsNullOrEmpty(request.To)
                 || string.IsNullOrEmpty(request.DepartureDate))
                 return false;
-            
+            //05 testos pēdējais. :)
             if (request.From.ToLower().Trim() == request.To.ToLower().Trim())
             {
                 return false;
