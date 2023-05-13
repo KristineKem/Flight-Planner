@@ -35,15 +35,15 @@ namespace FlightPlanner.Storage
 
         public static bool IsFlightValuesValid(Flight flight)
         {
-            if (string.IsNullOrEmpty(flight.Carrier.ToString())
-                    || string.IsNullOrEmpty(flight.ArrivalTime.ToString())
-                    || string.IsNullOrEmpty(flight.DepartureTime.ToString())
-                    || string.IsNullOrEmpty(flight.To.Country.ToString())
-                    || string.IsNullOrEmpty(flight.To.City.ToString())
-                    || string.IsNullOrEmpty(flight.To.AirportCode.ToString())
-                    || string.IsNullOrEmpty(flight.From.Country.ToString())
-                    || string.IsNullOrEmpty(flight.From.City.ToString())
-                    || string.IsNullOrEmpty(flight.From.AirportCode.ToString()))
+            if (string.IsNullOrEmpty(flight.Carrier)
+                || string.IsNullOrEmpty(flight.ArrivalTime)
+                || string.IsNullOrEmpty(flight.DepartureTime)
+                || string.IsNullOrEmpty(flight.To.Country)
+                || string.IsNullOrEmpty(flight.To.City)
+                || string.IsNullOrEmpty(flight.To.AirportCode)
+                || string.IsNullOrEmpty(flight.From.Country)
+                || string.IsNullOrEmpty(flight.From.City)
+                || string.IsNullOrEmpty(flight.From.AirportCode))
                 return true;
 
             return false;
@@ -51,9 +51,7 @@ namespace FlightPlanner.Storage
 
         public static bool IsSameAirportCodes(Flight flight)
         {
-            if(flight.To.AirportCode.ToString().ToLower() == flight.From.AirportCode.ToString().ToLower()
-                    || flight.To.Country.ToString().ToLower() == flight.From.Country.ToString().ToLower()
-                    || flight.To.City.ToString().ToLower() == flight.From.City.ToString().ToLower())
+            if(flight.To.AirportCode.ToLower() == flight.From.AirportCode.ToLower())
                 return true;
 
             return false;
@@ -61,9 +59,10 @@ namespace FlightPlanner.Storage
 
         public static bool IsDateValid(Flight flight)
         {
-            if(DateTime.Compare(DateTime.Parse(flight.DepartureTime.ToString()),
-                DateTime.Parse(flight.ArrivalTime.ToString())) < 0)
+            if(DateTime.Compare(DateTime.Parse(flight.DepartureTime),
+                DateTime.Parse(flight.ArrivalTime)) < 0)
                 return true;
+
             return false;
         }
 
@@ -83,9 +82,9 @@ namespace FlightPlanner.Storage
         {
             var pageResult = new PageResult();
             
-            var flights = _flights.FindAll(f => f.From == request.From
-                                                && f.To == request.To
-                                                && f.DepartureTime == request.DepartureDate);
+            var flights = _flights.FindAll(f => f.From.AirportCode == request.From
+                                                && f.To.AirportCode == request.To
+                                                && f.DepartureTime.Contains(request.DepartureDate));
 
             foreach(var flight in flights)
             {
@@ -100,14 +99,11 @@ namespace FlightPlanner.Storage
 
         public static bool IsRequestValuesValid (CustomerRequest request)
         {
-            if(string.IsNullOrEmpty(request.From.Country.ToString())
-                || string.IsNullOrEmpty(request.From.City.ToString())
-                || string.IsNullOrEmpty(request.From.AirportCode.ToString())
-                || string.IsNullOrEmpty(request.To.Country.ToString())
-                || string.IsNullOrEmpty(request.To.City.ToString())
-                || string.IsNullOrEmpty(request.To.AirportCode.ToString())
-                || string.IsNullOrEmpty(request.DepartureDate.ToString()))
+            if(string.IsNullOrEmpty(request.From)
+                || string.IsNullOrEmpty(request.To)
+                || string.IsNullOrEmpty(request.DepartureDate))
                 return false;
+
             return true;
         }
 

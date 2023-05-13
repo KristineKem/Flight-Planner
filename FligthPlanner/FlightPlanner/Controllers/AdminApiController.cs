@@ -53,8 +53,10 @@ namespace FlightPlanner.Controllers
                 {
                     return BadRequest();
                 }
-           
+                
                 FlightStorage.AddFlight(flight);
+                AirportStorage.AddAirport(flight.To);
+                AirportStorage.AddAirport(flight.From);
                 return Created("", flight);
             }            
         }

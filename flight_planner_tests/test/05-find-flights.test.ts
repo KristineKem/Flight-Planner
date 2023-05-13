@@ -13,15 +13,16 @@ describe("Finding Flights", () => {
         )
 
         const response = await CustomerFlightApi.searchFlights(request)
-
+        
         expect(response.status).toBe(200)
         expect(response.data).toEqual({
             page: 0,
             totalItems: 0,
             items: []
         } as PageResult<Flight>)
-
+        
         done()
+        console.log(request);
     });
 
     it("should be able to find flight by id", async done => {

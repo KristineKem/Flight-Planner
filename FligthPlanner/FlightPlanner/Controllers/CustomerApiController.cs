@@ -13,6 +13,7 @@ namespace FlightPlanner.Controllers
         [Route("airports")]
         public IActionResult SearchAirports(string typehead)
         {
+            
             var airports = AirportStorage.SearchAirports(typehead);
             if(airports == null)
             {
@@ -26,7 +27,7 @@ namespace FlightPlanner.Controllers
         [Route("flights/search")]
         public IActionResult SearchFlights(CustomerRequest request)
         {                  
-            if(!FlightStorage.IsRequestValuesValid(request))
+            if(FlightStorage.IsRequestValuesValid(request))
             {
                 return BadRequest();
             }
