@@ -103,6 +103,11 @@ namespace FlightPlanner.Storage
                 || string.IsNullOrEmpty(request.To)
                 || string.IsNullOrEmpty(request.DepartureDate))
                 return false;
+            
+            if (request.From.ToLower().Trim() == request.To.ToLower().Trim())
+            {
+                return false;
+            }
 
             return true;
         }

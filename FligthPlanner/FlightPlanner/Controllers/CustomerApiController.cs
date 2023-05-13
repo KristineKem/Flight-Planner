@@ -11,10 +11,10 @@ namespace FlightPlanner.Controllers
     {
         [HttpGet]
         [Route("airports")]
-        public IActionResult SearchAirports(string typehead)
+        public IActionResult SearchAirports(string search)
         {
             
-            var airports = AirportStorage.SearchAirports(typehead);
+            var airports = AirportStorage.SearchAirports(search);
             if(airports == null)
             {
                 return NotFound();
@@ -26,8 +26,9 @@ namespace FlightPlanner.Controllers
         [HttpPost]
         [Route("flights/search")]
         public IActionResult SearchFlights(CustomerRequest request)
-        {                  
-            if(FlightStorage.IsRequestValuesValid(request))
+        {
+            //request ir valid.. atgriež true.. tapēc izpildās if un saka Bad request. :D pieņemam tikai sliktos pieprasījumus. :D
+            if (!FlightStorage.IsRequestValuesValid(request))
             {
                 return BadRequest();
             }
