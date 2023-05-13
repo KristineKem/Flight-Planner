@@ -26,7 +26,7 @@ namespace FlightPlanner.Controllers
         [Route("flights/search")]
         public IActionResult SearchFlights(CustomerRequest request)
         {                  
-            if(FlightStorage.IsRequestValuesValid(request))
+            if(!FlightStorage.IsRequestValuesValid(request))
             {
                 return BadRequest();
             }

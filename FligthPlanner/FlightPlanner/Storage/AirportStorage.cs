@@ -13,11 +13,16 @@ namespace FlightPlanner.Storage
 
         public static List<Airport> SearchAirports(string typehead)
         { 
-            var foundAirports = _airports.FindAll(a => a.AirportCode.ToLower().Contains(typehead.ToLower().Trim())
-                                                    || a.Country.ToLower().Contains(typehead.ToLower().Trim())
-                                                    || a.City.ToLower().Contains(typehead.ToLower().Trim()));
+            var foundAirports = _airports.FindAll(a => a.AirportCode.ToLower().Contains(CleanString(typehead))
+                                                    || a.Country.ToLower().Contains(CleanString(typehead))
+                                                    || a.City.ToLower().Contains(CleanString(typehead)));
 
             return foundAirports;
+        }
+
+        public static string CleanString(string str)
+        {
+            return str.ToLower().Trim();
         }
 
         public static bool DoesAirportExist(Airport airport)

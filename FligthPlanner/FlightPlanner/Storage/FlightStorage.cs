@@ -21,7 +21,15 @@ namespace FlightPlanner.Storage
 
         public static bool DoesFlightAlreadyExist(Flight flight) 
         {
-            var result = _flights.Contains(flight);
+            var result = _flights.Any(f => f.From.Country == flight.From.Country
+                                        && f.From.City == flight.From.City
+                                        && f.From.AirportCode == flight.From.AirportCode
+                                        && f.To.Country == flight.To.Country
+                                        && f.To.City == flight.To.City
+                                        && f.To.AirportCode == flight.To.AirportCode
+                                        && f.DepartureTime == flight.DepartureTime
+                                        && f.ArrivalTime == flight.ArrivalTime
+                                        && f.Carrier == flight.Carrier);
             return result;
         }
 
@@ -98,8 +106,7 @@ namespace FlightPlanner.Storage
                 || string.IsNullOrEmpty(request.To.Country.ToString())
                 || string.IsNullOrEmpty(request.To.City.ToString())
                 || string.IsNullOrEmpty(request.To.AirportCode.ToString())
-                || string.IsNullOrEmpty(request.DepartureDate.ToString())
-                )
+                || string.IsNullOrEmpty(request.DepartureDate.ToString()))
                 return false;
             return true;
         }
