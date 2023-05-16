@@ -11,6 +11,12 @@ namespace FlightPlanner.Controllers
     public class AdminApiController : ControllerBase
     {
         private static readonly object lockObject = new object();
+        private readonly FlightPlannerDbContext _context;
+
+        public AdminApiController(FlightPlannerDbContext context)
+        {
+            _context = context;
+        }
 
         [HttpGet]
         [Route("flights/{id}")]
