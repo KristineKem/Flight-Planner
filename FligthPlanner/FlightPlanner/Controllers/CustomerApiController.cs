@@ -1,51 +1,53 @@
 ﻿using FlightPlanner.Models;
-using FlightPlanner.Storage;
+using FlightPlanner.Validation;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FlightPlanner.Controllers
 {    
     [ApiController]
     [Route("api")]
-    public class CustomerApiController : ControllerBase
+    public class CustomerApiController : BaseApiController
     {
-        [HttpGet]
-        [Route("airports")]
-        public IActionResult SearchAirports(string search)
-        {
+        public CustomerApiController(FlightPlannerDbContext context) : base(context) { }
+
+        //[HttpGet]
+        //[Route("airports")]
+        //public IActionResult SearchAirports(string search)
+        //{
             
-            var airports = AirportStorage.SearchAirports(search);
-            if(airports == null)
-            {
-                return NotFound();
-            }
+        //    var airports = AirportStorage.SearchAirports(search);
+        //    if(airports == null)
+        //    {
+        //        return NotFound();
+        //    }
 
-            return Ok(airports);
-        }
+        //    return Ok(airports);
+        //}
 
-        [HttpPost]
-        [Route("flights/search")]
-        public IActionResult SearchFlights(CustomerRequest request)
-        {
-            if (!FlightStorage.IsRequestValuesValid(request))
-            {
-                return BadRequest();
-            }
+        //[HttpPost]
+        //[Route("flights/search")]
+        //public IActionResult SearchFlights(CustomerRequest request)
+        //{
+        //    if (!FlightStorage.IsRequestValuesValid(request))
+        //    {
+        //        return BadRequest();
+        //    }
 
-            var flights = FlightStorage.FindFlights(request);
-            return Ok(flights);
-        }
+        //    var flights = FlightStorage.FindFlights(request);
+        //    return Ok(flights);
+        //}
 
-        [HttpGet]
-        [Route("flights/{id}")]
-        public IActionResult FindFlightById(int id)
-        {
-            var flight = FlightStorage.SearchFlightById(id);
-            if(flight == null)
-            {
-                return NotFound();
-            }
+        //[HttpGet]
+        //[Route("flights/{id}")]
+        //public IActionResult FindFlightById(int id)
+        //{
+        //    var flight = FlightStorage.SearchFlightById(id);
+        //    if(flight == null)
+        //    {
+        //        return NotFound();
+        //    }
 
-            return Ok(flight);
-        }
+        //    return Ok(flight);
+        //}
     }
 }
