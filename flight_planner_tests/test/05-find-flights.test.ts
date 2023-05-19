@@ -22,7 +22,6 @@ describe("Finding Flights", () => {
         } as PageResult<Flight>)
         
         done()
-        console.log(request);
     });
 
     it("should be able to find flight by id", async done => {

@@ -41,5 +41,15 @@ namespace FlightPlanner.Validation
 
             return false;
         }
+
+        public static bool IsRequestValuesValid(CustomerRequest request)
+        {
+            if(string.IsNullOrEmpty(request.DepartureDate)
+               || string.IsNullOrEmpty(request.From)
+               || string.IsNullOrEmpty(request.To))
+                return false;
+
+            return true;
+        }
     }
 }
