@@ -41,7 +41,7 @@ describe("Airport Typeahead", () => {
             "Latvia",
             "Riga"
         ];
-
+       
         await Promise.all([
             await AdminFlightApi.addFlight(flight1),
             await AdminFlightApi.addFlight(flight2),
@@ -49,7 +49,7 @@ describe("Airport Typeahead", () => {
         ])
 
         const responses = await Promise.all(phrases.map(it => CustomerFlightApi.searchAirports(it)))
-
+        
         responses.forEach(res => {
             expect(res.status).toBe(200)
             expect(res.data).toEqual([RIX])

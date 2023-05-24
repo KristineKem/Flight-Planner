@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using FlightPlanner.Core.Models;
+using FlightPlanner.Core.Services;
+using Microsoft.AspNetCore.Mvc;
 
 namespace FlightPlanner.Controllers
 {
@@ -6,16 +8,20 @@ namespace FlightPlanner.Controllers
     [ApiController]
     public class ClearController : BaseApiController
     {
-        public ClearController(FlightPlannerDbContext context) : base(context) { }
+        private readonly IDbService _dbService;
+
+        public ClearController(IDbService dbService)
+        {
+           _dbService = dbService;
+        }
 
         [HttpPost]
         [Route("clear")]
         public IActionResult Clear()
         {
-            _context.Flights.RemoveRange(_context.Flights);
-            _context.Airports.RemoveRange(_context.Airports);
-            _context.SaveChanges();
-            
+            _dbService.Clear<Flight>();
+            _dbService.Clear<Airport>();
+
             return Ok();
         }
     }

@@ -1,7 +1,8 @@
 ﻿using FlightPlanner.Models;
-using FlightPlanner.Validation;
+using FlightPlanner.Core.Models;
+using FlightPlanner.Core.Services;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+using AutoMapper;
 
 namespace FlightPlanner.Controllers
 {    
@@ -9,44 +10,48 @@ namespace FlightPlanner.Controllers
     [Route("api")]
     public class CustomerApiController : BaseApiController
     {
-        public CustomerApiController(FlightPlannerDbContext context) : base(context) { }
+        private readonly IFlightService _flightService;
+        private readonly IAirportService _airportService;
+        private readonly IMapper _mapper;
+        public CustomerApiController(
+            IFlightService flightService,
+            IAirportService airportService,
+            IMapper mapper)
+        {
+            _flightService = flightService;
+            _airportService = airportService;
+            _mapper = mapper;
+        }
 
         [HttpGet]
         [Route("airports")]
         public IActionResult SearchAirports(string search)
         {
-            var airports = _context.Airports.Where(a => a.AirportCode.ToLower().Contains(search.ToLower().Trim())
-                                                        || a.City.ToLower().Contains(search.ToLower().Trim())
-                                                        || a.Country.ToLower().Contains(search.ToLower().Trim()))
-                .ToList();
-
+            var airports = _airportService.SearchAirports(search);
+                
             if (airports == null)
             {
                 return NotFound();
             }
 
-            return Ok(airports);
+            var mappedAirports = _mapper.Map<AddAirportRequest[]>(airports);
 
+            return Ok(mappedAirports);
         }
+
         [HttpPost]
         [Route("flights/search")]
         public IActionResult SearchFlights(CustomerRequest request)
         {
-            if (!RequestDataValidation.IsRequestValuesValid(request))
-            {
-                return BadRequest();
-            }
-
-            if (request.From == request.To)
+            if (!_flightService.IsRequestValuesValid(request) 
+                || request.From == request.To)
             {
                 return BadRequest();
             }
 
             var pageResult = new PageResult();
 
-            var flights = _context.Flights.Where(f => f.DepartureTime.Contains(request.DepartureDate) 
-                                                      && f.From.AirportCode.ToLower().Contains(request.From.ToLower()) 
-                                                      && f.To.AirportCode.ToLower().Contains(request.To.ToLower())).ToList();
+            var flights = _flightService.FindFlights(request);
 
             foreach (var flight in flights)
             {
@@ -63,16 +68,16 @@ namespace FlightPlanner.Controllers
         [Route("flights/{id}")]
         public IActionResult FindFlightById(int id)
         {
-            var flight = _context.Flights.Include(f => f.From)
-                                        .Include(f => f.To)
-                                        .SingleOrDefault(f => f.Id == id);
+            var flight = _flightService.GetFullFlight(id);
 
             if (flight == null)
             {
                 return NotFound();
             }
 
-            return Ok(flight);
+            var mappedFlight = _mapper.Map<AddFlightRequest>(flight);
+
+            return Ok(mappedFlight);
         }
     }
 }
