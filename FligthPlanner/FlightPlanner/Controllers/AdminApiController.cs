@@ -1,22 +1,28 @@
 ﻿using FlightPlanner.Models;
-using FlightPlanner.Storage;
+using FlightPlanner.Validation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace FlightPlanner.Controllers
 {
     [Route("admin-api")]
     [ApiController]
     [Authorize]
-    public class AdminApiController : ControllerBase
+    public class AdminApiController : BaseApiController
     {
         private static readonly object lockObject = new object();
+        
 
+        public AdminApiController(FlightPlannerDbContext context) : base(context) { }
+    
         [HttpGet]
         [Route("flights/{id}")]
         public IActionResult GetFlight(int id)
         {
-            var flight = FlightStorage.GetFlight(id);
+            var flight = _context.Flights.Include(f => f.From)
+                                            .Include(f => f.To)
+                                            .SingleOrDefault(f => f.Id == id);
             if(flight == null)
             {
                 return NotFound();
@@ -31,30 +37,20 @@ namespace FlightPlanner.Controllers
         {
             lock(lockObject)
             {
-                
-                if(FlightStorage.DoesFlightAlreadyExist(flight) == true)
+                if (DoesFlightAlreadyExist(flight))
                 {
-                   return Conflict();
+                    return Conflict();
                 }
 
-                if(FlightStorage.IsFlightValuesValid(flight))
-                {
+                if (!RequestDataValidation.IsFlightValuesValid(flight)
+                    || RequestDataValidation.IsSameAirportCodes(flight)
+                    || !RequestDataValidation.IsFlightDatesCorrect(flight))
                     return BadRequest();
-                }
 
-                if(FlightStorage.IsSameAirportCodes(flight))
-                {
-                    return BadRequest();
-                }
-
-                if(FlightStorage.IsDateValid(flight) == false)
-                {
-                    return BadRequest();
-                }
-                
-                FlightStorage.AddFlight(flight);
-                AirportStorage.AddAirport(flight.To);
-                AirportStorage.AddAirport(flight.From);
+                _context.Flights.Add(flight);
+                _context.Airports.Add(flight.To);
+                _context.Airports.Add(flight.From);
+;               _context.SaveChanges();
                 return Created("", flight);
             }
         }
@@ -65,11 +61,15 @@ namespace FlightPlanner.Controllers
         {
             lock (lockObject)
             {
-                var flight = FlightStorage.RemoveFlight(id);
+                var flight = _context.Flights.SingleOrDefault(f => f.Id == id);
+
                 if (flight == null)
                 {
                     return Ok();
                 }
+
+                _context.Flights.Remove(flight);
+                _context.SaveChanges();
 
                 return Ok();
             }

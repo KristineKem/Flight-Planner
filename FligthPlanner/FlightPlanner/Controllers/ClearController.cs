@@ -1,18 +1,21 @@
-﻿using FlightPlanner.Storage;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 
 namespace FlightPlanner.Controllers
 {
     [Route("testing-api")]
     [ApiController]
-    public class ClearController : ControllerBase
+    public class ClearController : BaseApiController
     {
+        public ClearController(FlightPlannerDbContext context) : base(context) { }
+
         [HttpPost]
         [Route("clear")]
         public IActionResult Clear()
         {
-            FlightStorage.Clear();
-            AirportStorage.Clear();
+            _context.Flights.RemoveRange(_context.Flights);
+            _context.Airports.RemoveRange(_context.Airports);
+            _context.SaveChanges();
+            
             return Ok();
         }
     }
