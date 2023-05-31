@@ -8,7 +8,7 @@ namespace FlightPlanner.Controllers
 {    
     [ApiController]
     [Route("api")]
-    public class CustomerApiController : BaseApiController
+    public class CustomerApiController : ControllerBase
     {
         private readonly IFlightService _flightService;
         private readonly IAirportService _airportService;

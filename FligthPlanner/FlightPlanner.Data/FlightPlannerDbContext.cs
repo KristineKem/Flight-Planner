@@ -12,9 +12,5 @@ namespace FlightPlanner.Data
         public DbSet<Flight> Flights { get; set; }
 
         public DbSet<Airport> Airports { get; set; }
-        public object Set<T>() where T : Entity
-        {
-            throw new NotImplementedException();
-        }
     }
 }

@@ -11,7 +11,7 @@ namespace FlightPlanner.Controllers
     [Route("admin-api")]
     [ApiController]
     [Authorize]
-    public class AdminApiController : BaseApiController
+    public class AdminApiController : ControllerBase
     {
         private static readonly object lockObject = new object();
         private readonly IFlightService _flightService;

@@ -6,7 +6,7 @@ namespace FlightPlanner.Controllers
 {
     [Route("testing-api")]
     [ApiController]
-    public class ClearController : BaseApiController
+    public class ClearController : ControllerBase
     {
         private readonly IDbService _dbService;
 
